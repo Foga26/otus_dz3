@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../resources/app_color.dart';
+import '../resources/main_navigation.dart';
 import '../resources/resources.dart';
 
 class Recipes {
@@ -69,126 +72,102 @@ class _RecipesModelListWidgetState extends State<RecipesModelListWidget> {
 
   void _onRecipeTap(int index) {
     var id = _recipes[index].id;
-    if (id == 1) {
-      Navigator.pushNamed(context, '/recipeInfo');
-    } else if (id == 2) {
-      Navigator.pushNamed(context, '/recipeInfoPokeboul');
-    }
+    // if (id == 1) {
+    //   Navigator.pushNamed(context, '/recipeInfo');
+    // } else if (id == 2) {
+    //   Navigator.pushNamed(context, '/recipeInfoPokeboul');
+    // }
+    Navigator.of(context).pushNamed(
+      MainNavigationRouteNames.recipeInfoWidget,
+      arguments: id,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(0xffececec),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: const Color(0xff2ECC71),
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.local_pizza),
-              label: 'Рецепты',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Вход',
-            ),
-          ],
-        ),
-        body: SafeArea(
-          maintainBottomViewPadding: true,
-          child: CustomScrollView(
+      backgroundColor: ColorApp.backGroundColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 45),
+          child: ListView.separated(
             physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverList(
-                  delegate: SliverChildListDelegate([
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 45),
-                    child: ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      separatorBuilder: (BuildContext context, int index) {
-                        return const Padding(padding: EdgeInsets.only(top: 24));
-                      },
-                      itemCount: _recipes.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        {
-                          final recipes = _recipes[index];
-                          return Container(
-                            margin: const EdgeInsets.only(left: 16, right: 16),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                            ),
-                            width: 396,
-                            height: 136,
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5),
-                                  ),
-                                  child: Image(
-                                    fit: BoxFit.fitHeight,
-                                    image: AssetImage(recipes.imageName),
-                                    width: 149,
-                                    height: 136,
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 165, top: 30),
-                                  child: SizedBox(
-                                    width: 208,
-                                    child: Text(
-                                      recipes.recipeName,
-                                      style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          overflow: TextOverflow.ellipsis),
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 95, left: 165),
-                                  child: Icon(
-                                    Icons.watch_later_outlined,
-                                    size: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 94, left: 192),
-                                  child: SizedBox(
-                                    height: 19,
-                                    child: Text(
-                                      recipes.timer,
-                                      style: const TextStyle(
-                                          color: Color(0xff2ECC71),
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                ),
-                                Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(10),
-                                    onTap: () => _onRecipeTap(index),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
+            shrinkWrap: true,
+            separatorBuilder: (BuildContext context, int index) {
+              return const Padding(padding: EdgeInsets.only(top: 24));
+            },
+            itemCount: _recipes.length,
+            itemBuilder: (BuildContext context, int index) {
+              {
+                final recipes = _recipes[index];
+                return Container(
+                  margin: const EdgeInsets.only(left: 16, right: 16),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
-                ),
-              ]))
-            ],
+                  width: 396,
+                  height: 136,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                        ),
+                        child: Image(
+                          fit: BoxFit.fitHeight,
+                          image: AssetImage(recipes.imageName),
+                          width: 149,
+                          height: 136,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 165, top: 30),
+                        child: Flex(direction: Axis.vertical, children: [
+                          Text(
+                            recipes.recipeName,
+                            style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis),
+                            maxLines: 2,
+                          ),
+                        ]),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 95, left: 165),
+                        child: Icon(
+                          Icons.watch_later_outlined,
+                          size: 16,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 94, left: 192),
+                        child: SizedBox(
+                          height: 19,
+                          child: Text(
+                            recipes.timer,
+                            style: const TextStyle(
+                                color: ColorApp.textColorGreen, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () => _onRecipeTap(index),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
